@@ -1,0 +1,59 @@
+name: integration-tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    # crossing fingers
+    runs-on: ubuntu-latest
+
+    env:
+      CONFIGURATION: Release
+      INTEGRATIONTEST_RELPATH: 'src/integrationtests-cli/bin/Release/netcoreapp3.1'
+
+    steps:
+    - uses: actions/checkout@v1
+    # HACK required for GitVersion
+    - run: |
+        git fetch --tags
+        git branch --create-reflog master origin/master
+    - name: Install GitVersion
+      uses: gittools/actions/setup-gitversion@v0.3
+      with:
+          versionSpec: '5.1.x'
+    - name: Update AssemblyInfo files
+      id: gitversion # step id used as reference for output values
+      uses: gittools/actions/execute-gitversion@v0.3
+      with:
+        updateAssemblyInfo: true
+    - name: 'Set version in aggregator-manifest.ini'
+      run: 'sed -E -i "s/version=.*/version=${{ steps.gitversion.outputs.fullSemVer }}/" ${GITHUB_WORKSPACE}/src/aggregator-function/aggregator-manifest.ini'
+
+    # compile and test
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.101' # SDK Version to use.
+    - name: 'Delete Directory.Build.targets from src/aggregator-function'
+      run: rm src/aggregator-function/Directory.Build.targets
+    - run: 'dotnet restore src/aggregator-cli.sln'
+    - run: 'dotnet build --configuration $CONFIGURATION src/aggregator-cli.sln'
+    - run: 'dotnet test --configuration $CONFIGURATION src/unittests-core/unittests-core.csproj'
+    - run: 'dotnet test --configuration $CONFIGURATION src/unittests-ruleng/unittests-ruleng.csproj'
+    - run: 'dotnet test src/unittests-function/unittests-function.csproj'
+    # logon-data.json is stored in project Secrets
+    - name: 'Get integration tests secrets'
+      run: |
+        echo "$LOGONDATA_JSON" > $GITHUB_WORKSPACE/$INTEGRATIONTEST_RELPATH/logon-data.json
+        export LOGONDATA_FNAME=$GITHUB_WORKSPACE/$INTEGRATIONTEST_RELPATH/logon-data.json
+        INTEGRATIONTEST_SUBSCRIPTIONID=$(jq -r '.subscription?' $LOGONDATA_FNAME)
+        echo "Azure subscription for testing: $INTEGRATIONTEST_SUBSCRIPTIONID"
+      env:
+        LOGONDATA_JSON: ${{ secrets.INTEGRATIONTESTS_CLI_LOGONDATA_JSON }}
+    # heavy weight integration tests
+    - run: 'dotnet vstest $INTEGRATIONTEST_RELPATH/integrationtests-cli.dll'
+    - name: 'Scrap secrets'
+      run: rm $GITHUB_WORKSPACE/$INTEGRATIONTEST_RELPATH/logon-data.json
