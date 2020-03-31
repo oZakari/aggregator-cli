@@ -88,9 +88,10 @@ namespace aggregator.cli
             return request;
         }
 
-        internal async Task StreamLogsAsync(TextWriter output, string lastLinePattern, CancellationToken cancellationToken)
+        internal async Task StreamLogsAsync(TextWriter output, string lastLinePattern, TimeSpan maxDuration, CancellationToken cancellationToken)
         {
             var regex = new Regex(lastLinePattern);
+            var endTimeUTC = DateTime.UtcNow + maxDuration;
 
             // see https://github.com/projectkudu/kudu/wiki/Diagnostic-Log-Stream
             using (var client = new HttpClient())
@@ -104,7 +105,8 @@ namespace aggregator.cli
 
                     using (var reader = new StreamReader(stream))
                     {
-                        while (!reader.EndOfStream)
+                        while (!reader.EndOfStream
+                            && DateTime.UtcNow < endTimeUTC)
                         {
                             //We are ready to read the stream
                             var line = await reader.ReadLineAsync();

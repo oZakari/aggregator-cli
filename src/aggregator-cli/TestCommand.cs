@@ -26,6 +26,9 @@ namespace aggregator.cli
         [Option('l', "lastLinePattern", Required = false, Default = @"Executed \'Functions\.", HelpText = "RegEx Pattern identifying last line of logs.")]
         public string LastLinePattern { get; set; }
 
+        [Option('m', "maxMinutes", Required = false, Default = 5, HelpText = "Max duration in minutes for log streaming.")]
+        public int MaxDuration { get; set; }
+
         internal override async Task<int> RunAsync(CancellationToken cancellationToken)
         {
             var context = await Context
@@ -36,7 +39,10 @@ namespace aggregator.cli
             var instances = new AggregatorInstances(context.Azure, context.Logger);
             var boards = new Boards(context.Devops, context.Logger);
 
-            var streamTask = instances.StreamLogsAsync(instance, lastLinePattern: this.LastLinePattern, cancellationToken: cancellationToken);
+            var streamTask = instances.StreamLogsAsync(instance,
+                    maxDuration: TimeSpan.FromMinutes(this.MaxDuration),
+                    lastLinePattern: this.LastLinePattern,
+                    cancellationToken: cancellationToken);
             int id = await boards.CreateWorkItemAsync(this.Project, this.Title, cancellationToken);
             streamTask.Wait(cancellationToken);
             return id > 0 ? 0 : 1;
