@@ -30,12 +30,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{020591FD-B34A-49E6-98E5-D8DD2A838997}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
+		..\.github\workflows\integration-tests.yml = ..\.github\workflows\integration-tests.yml
 		..\.github\workflows\release-to-GitHub.yml = ..\.github\workflows\release-to-GitHub.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "unittests-core", "unittests-core\unittests-core.csproj", "{6AD42A49-2EA4-4659-855D-0C011D368794}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "unittests-function", "unittests-function\unittests-function.csproj", "{A875638A-8E95-47BE-AEDD-BAD5113692B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "unittests-function", "unittests-function\unittests-function.csproj", "{A875638A-8E95-47BE-AEDD-BAD5113692B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "integrationtests-cli-alt", "integrationtests-cli-alt\integrationtests-cli-alt.csproj", "{E0A29835-CD78-4E0E-B131-4BA6A623B7EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +78,10 @@ Global
 		{A875638A-8E95-47BE-AEDD-BAD5113692B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A875638A-8E95-47BE-AEDD-BAD5113692B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A875638A-8E95-47BE-AEDD-BAD5113692B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0A29835-CD78-4E0E-B131-4BA6A623B7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0A29835-CD78-4E0E-B131-4BA6A623B7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0A29835-CD78-4E0E-B131-4BA6A623B7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0A29835-CD78-4E0E-B131-4BA6A623B7EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
