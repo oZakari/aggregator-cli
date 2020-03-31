@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -19,6 +20,11 @@ namespace integrationtests.cli
         protected End2EndScenarioBase(ITestOutputHelper output)
         {
             _output = output;
+            // sanity checks
+            if (!Guid.TryParse(TestLogonData.SubscriptionId, out Guid dummy))
+            {
+                throw new ConfigurationErrorsException("logon-data.json not found or invalid");
+            }
         }
 
         protected (int rc, string output) RunAggregatorCommand(string commandLine)
