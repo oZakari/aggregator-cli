@@ -5,15 +5,11 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
-using XUnitPriorityOrderer;
-
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
-// addset the custom test's collection orderer
-[assembly: TestCollectionOrderer(CollectionPriorityOrderer.TypeName, CollectionPriorityOrderer.AssembyName)]
+using Xunit.Extensions.Ordering;
 
 namespace integrationtests.cli
 {
-    [TestCaseOrderer(CasePriorityOrderer.TypeName, CasePriorityOrderer.AssembyName)]
+    [Order(3)]
     public class Scenario3_MultiInstance : End2EndScenarioBase
     {
         public Scenario3_MultiInstance(ITestOutputHelper output)

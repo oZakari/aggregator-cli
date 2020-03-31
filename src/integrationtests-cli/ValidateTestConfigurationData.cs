@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace integrationtests.cli
 {
+    [Order(1)]
     public class ConfigurationDataTests
     {
         [Fact]

@@ -2,11 +2,10 @@ using System;
 
 using Xunit;
 using Xunit.Abstractions;
-using XUnitPriorityOrderer;
+using Xunit.Extensions.Ordering;
 
 namespace integrationtests.cli
 {
-    [TestCaseOrderer(CasePriorityOrderer.TypeName, CasePriorityOrderer.AssembyName)]
     public class AddRuleTests : End2EndScenarioBase
     {
         public AddRuleTests(ITestOutputHelper output)
