@@ -12,7 +12,7 @@ jobs:
 
     env:
       CONFIGURATION: Release
-      INTEGRATIONTEST_RELPATH: 'src/integrationtests-cli/bin/Release/netcoreapp3.1'
+      INTEGRATIONTEST_RELPATH: 'src/integrationtests-cli'
 
     steps:
     - uses: actions/checkout@v1
