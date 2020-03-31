@@ -12,7 +12,7 @@ jobs:
 
     env:
       CONFIGURATION: Release
-      INTEGRATIONTEST_RELPATH: 'src/integrationtests-cli'
+      INTEGRATIONTEST_RELPATH: 'src/integrationtests-cli-alt/bin/Release/netcoreapp3.1'
 
     steps:
     - uses: actions/checkout@v1
@@ -42,7 +42,7 @@ jobs:
         LOGONDATA_JSON: ${{ secrets.INTEGRATIONTESTS_CLI_LOGONDATA_JSON }}
       shell: bash
     # heavy weight integration tests
-    - run: 'dotnet test --configuration $env:CONFIGURATION .\src\integrationtests-cli-alt\integrationtests-cli-alt.csproj'
+    - run: 'dotnet test --no-build --configuration $env:CONFIGURATION .\src\integrationtests-cli-alt\integrationtests-cli-alt.csproj'
     # run anyway
     - name: 'Scrap secrets'
       run: rm $env:GITHUB_WORKSPACE/$env:INTEGRATIONTEST_RELPATH/logon-data.json
